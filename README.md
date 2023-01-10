@@ -1,2 +1,2 @@
-## Welcome STA6507 Nonparametric Stats
+## Welcome to STA6856 Time Series Analysis!
 
