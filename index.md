@@ -13,7 +13,7 @@ show_sidebar: false
 |:-:|:---:|:--------------------|:--:|:-:|
 | 1    | M     | Intro to Time Series|Slides 1-16 |
 |      | W     | Introduction to R/RStudio/Quarto for Time Series | |
-| 2    | M     | MLK (no class) | |
+| 2    | M     | **MLK (no class)** | |
 |      | W     |  | |
 | 3    | M     |  | | 
 |      | W     | |  | 
