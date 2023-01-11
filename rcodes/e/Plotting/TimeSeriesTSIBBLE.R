@@ -36,12 +36,15 @@ olympic_running
 # The 14 time series are identified by the KEYS: Length and Sex.
 # The distinct() function can be used to show them
 
-olympic_running %>% distinct(Length)
+olympic_running %>% 
+  distinct(Length)
 
 # Working on tsibble objects
 data(PBS)
 # Let's look at the Cost time series
-costa10 = PBS %>% filter(ATC2=="A10")%>% dplyr::select(Cost) %>%
+costa10 = PBS %>% 
+  filter(ATC2=="A10")%>% 
+  dplyr::select(Cost) %>%
   summarise(TotalC = sum(Cost)) %>%
   dplyr::mutate(CostM=TotalC/1e6)
 
