@@ -10,7 +10,7 @@ show_sidebar: false
 ## Tentative Schedule
 
 | **Week** | **Day** | **Topic(s)** | **To Do** |
-|:-:|:---:|:--------------------:|:--:|:-:|
+|:-:|:---:|:--------------------|:--:|:-:|
 | 1    | M     | Intro to Time Series| |
 |      | W  | Counting methods, discrete and continuous distributions (review) | |
 | 2    | M    | Qunatiles, Expected Values (review) | HW1|
