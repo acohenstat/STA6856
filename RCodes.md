@@ -10,6 +10,6 @@ show_sidebar: false
 
 | **Topic** | **R Code**  |
 |:-----------------------|:---:|
-| - Introduction to R    | [.R file](rcodes/R_Tidyverse.R) | 
+| - Introduction to R    | [.html/.qmd](rcodes/TimeSeriesR.html) | 
 
 

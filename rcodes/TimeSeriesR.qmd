@@ -1,0 +1,28 @@
+---
+title: "Introduction to R with Time Series"
+format: html
+editor: visual
+---
+
+## Tidyverse
+
+A collection of packages for data science projects.
+
+-   `dyplr`: manipulating data.frame
+
+-   `purrr`: working with functions
+
+-   `ggplot2`: visualization
+
+-   `tidy` data: each row represents one observation and columns represent variables.
+
+```{r}
+#install.packages("tidyverse")
+library(tidyverse)
+#intall.packages("dslabs")
+library(dslabs)
+library(tsibble)
+library(tsibbledata)
+library(feasts)
+data("murders")
+```
