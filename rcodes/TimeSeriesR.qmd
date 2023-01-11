@@ -1,28 +1,283 @@
 ---
-title: "Introduction to R with Time Series"
+title: "Introduction to R + Time Series"
+author: "Achraf Cohen"
 format: html
 editor: visual
+execute: 
+  warning: false
+  message: false
 ---
 
-## Tidyverse
-
-A collection of packages for data science projects.
-
--   `dyplr`: manipulating data.frame
-
--   `purrr`: working with functions
-
--   `ggplot2`: visualization
-
--   `tidy` data: each row represents one observation and columns represent variables.
+#### Loading packages
 
 ```{r}
-#install.packages("tidyverse")
+#| echo: true
 library(tidyverse)
-#intall.packages("dslabs")
 library(dslabs)
+library(ggthemes)
+library(ggrepel)
 library(tsibble)
 library(tsibbledata)
 library(feasts)
-data("murders")
+```
+
+## Tidyverse packages
+
+The tidyverse is collection of R packages designed for data science.
+
+-   `dyplr`: manipulating data.frame
+-   `purrr`: working with functions
+-   `ggplot2`: visualization
+-   `tidy` data: each row represents one observation and columns represent variables.
+
+#### Tidy Data
+
+```{r}
+data(murders)
+data("co2")
+data("ChickWeight")
+data("relig_income")
+head(murders)
+```
+
+#### Working with Data.frame
+
+```{r}
+# add a variable/column
+murders = mutate(murders, rate=total/population*100000)
+head(murders)
+```
+
+```{r}
+# subsetting with filter
+filter(murders, rate < 0.7)
+```
+
+```{r}
+# select variable
+new_table = select(murders, state, region, rate)
+filter(new_table, rate <0.7)
+```
+
+The pipe operator`%>%`. With dplyr we can do a series of operations, for example select and then filter using the pipe operator.
+
+```{r}
+murders %>% 
+  select(state,region,rate) %>% 
+  filter(rate<0.7)
+
+# change rate threshold
+murders %>% 
+  select(state, region, rate) %>% 
+  filter(rate < 0.5)
+
+# change select variables
+murders %>% 
+  select(abb, region, rate) %>% 
+  filter(rate <0.7)
+
+# How it works
+25 %>% 
+  sqrt() %>% 
+  log2()
+log2(sqrt(25))
+```
+
+##### Summarizing data
+
+```{r}
+data(heights)
+# computes the average and standard deviation for females:
+avg_sd = heights %>% 
+  filter(sex=="Female") %>%
+  summarise(avg=mean(height),sdt=sd(height))
+
+avg_sd
+```
+
+Let's compute the average murder rate of the USA. Recall that the USA murder rate is not the average of the state murder rates.
+
+```{r}
+
+murders %>%
+  summarise(States.Avg.rate = mean(rate)) 
+
+murders %>% 
+  summarise(US.murder.rate=sum(total)/sum(population)*100000)
+```
+
+##### Data Grouping
+
+`tibble`: many tables same columns but not necessarily the same number of rows
+
+```{r}
+heights %>% 
+  group_by(sex) %>% 
+  summarise(avg= mean(height),std=sd(height))
+
+
+# let's compute the median murder rate in the four regions of the country:
+murders %>%
+  group_by(region) %>%
+  summarise(median.rate=median(rate))
+```
+
+```{r}
+# apply the same function to each element of a vector 
+compute_s_n <- function(n){
+  x <- 1:n
+  sum(x)
+}
+sn = map_dbl(c(1,5,10,15,20), compute_s_n)
+```
+
+#### Visualization using ggplot2
+
+```{r}
+murders %>% 
+  ggplot(aes(x=population/10^6,y=total,col=region)) +
+  geom_point(size=4)+
+  geom_text_repel(aes(label=abb))+
+  scale_x_log10()+
+  scale_y_log10()+
+  geom_smooth(method=lm,se=FALSE)+
+  labs(x="Populations in millions (log scale)",
+       y="Total number of murders (log scale)",
+       title = "US Gun Murders in 2010")+
+  scale_color_discrete(name = "Region") +
+  facet_wrap(~region)+ 
+  theme_dark()
+```
+
+## Time Series using R
+
+`tsibble`: A time series can be thought of as a list of numbers (the measurements), along with some information about what times those numbers were recorded (the index). This information can be stored as a `tsibble` object in R.
+
+```{r}
+  y = tsibble(
+    Year = 2010:2019,
+    Observation = c(13, 85, 2502, 200, 50,45,48,49,69,6),
+    index = Year
+  )
+y
+```
+
+`tsibble` extends `tibble` (tidy data frames) to time series. We have set the time series index to be the Year column. Suppose we have more frequent data, say monthly data
+
+```{r}
+  z = data.frame(date = c("2021 Jan","2021 Feb"," 2021 Mar"," 2021 Apr","2021 May"),observation = c(52, 39, 78, 47, 747))
+z
+
+
+z1 = z %>%   
+    mutate(Month = yearmonth(date)) %>%
+    as_tsibble(index = Month)
+z1
+```
+
+`tsibble` allows multiple time series to be stored. Let's look at the Olympics data set containing the fastest running times for women's and men's track races from 100m to 10000m. We have a `tsibble` object with:
+
+-   **\[4y\]** indicates that the interval of these obs. is every 4 years.
+
+-   **Key** line: indicates 14 separate time series
+
+-   The 14 time series are identified by the **KEYS**: *Length and Sex*.
+
+-   The `distinct()` function can be used to show them
+
+```{r}
+library(tsibbledata) 
+olympic_running 
+
+olympic_running %>% 
+  distinct(Length)
+```
+
+Working on `tsibble` objects:
+
+```{r}
+data(PBS)
+# Let's look at the Cost time series 
+
+costa10 = PBS %>% 
+  filter(ATC2=="A10") %>% 
+  select(Cost) %>% 
+  summarise(TotalC = sum(Cost)) %>% 
+  mutate(CostM=TotalC/1e6)
+
+  autoplot(costa10,CostM) + 
+  labs(title = "Monthly Total Cost A10 Prescription", 
+       y="Total Cost in millions")
+  
+  
+```
+
+Season plot
+
+```{r}
+costa10 %>% 
+  gg_season(CostM,labels = "both") 
+
+```
+
+Multiple seasonal periods:
+
+| Data     | Day | Week | Year |
+|----------|-----|------|------|
+| Quarters |     |      | 4    |
+| Months   |     |      | 12   |
+| Weeks    |     |      | 52   |
+| Days     |     | 7    | 365  |
+| Hours    | 24  | 168  | 8766 |
+
+Data 1/2 hour electricity demand for Victoria
+
+```{r}
+vic_elec %>% 
+  gg_season(Demand, period = "day") + 
+  labs(y="MW", title="Electricity demand: Victoria")
+vic_elec 
+
+
+#Subseries 
+costa10 %>% 
+  gg_subseries(CostM)
+```
+
+```{r}
+??tourism
+
+h=tourism %>% 
+  filter(Purpose=="Holiday") %>% 
+  group_by(State) %>% 
+  summarise(Ttrips = sum(Trips)) 
+
+h
+
+autoplot(h,Ttrips)
+```
+
+To see the timing of the seasonal peaks
+
+```{r}
+ gg_season(h, Ttrips) + labs(y = "Overnight trips", title = "Australian holidays")
+ 
+ gg_subseries(h,Ttrips)
+ 
+ h %>%
+  pivot_wider(values_from=Ttrips, names_from=State) %>%
+  GGally::ggpairs(columns = 2:9)
+```
+
+
+### Autocorrelation Function
+
+```{r}
+aus_production %>% 
+  ACF(Beer) %>% 
+  autoplot() 
+
+costa10 %>% 
+  ACF(CostM, lag_max = 50) %>% 
+  autoplot()
 ```
