@@ -1,5 +1,6 @@
 ---
 title: "Introduction to R + Time Series"
+subtitle: "Lecture Notes"
 author: "Achraf Cohen"
 format: html
 editor: visual
@@ -268,7 +269,6 @@ To see the timing of the seasonal peaks
   pivot_wider(values_from=Ttrips, names_from=State) %>%
   GGally::ggpairs(columns = 2:9)
 ```
-
 
 ### Autocorrelation Function
 
