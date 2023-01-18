@@ -14,7 +14,7 @@ show_sidebar: false
 | 1    | M     | Intro to Time Series|Slides 1-16 |
 |      | W     | Introduction to R/RStudio/Quarto for Time Series | |
 | 2    | M     | **MLK (no class)** | |
-|      | W     |  | |
+|      | W     | Zero-Mean Simple Models + Covariance |Slides 17-23 |
 | 3    | M     |  | | 
 |      | W     | |  | 
 | 4    | M     |  | | 
