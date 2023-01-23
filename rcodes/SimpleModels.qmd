@@ -1,0 +1,31 @@
+---
+title: "Simple Models"
+author: "Dr. Cohen"
+format: html
+editor: visual
+---
+
+Simple models are the basics blocks for more complicated time series models
+
+```{r}
+library(itsmr)
+```
+
+
+## Normal Noise - iid
+
+```{r}
+w = rnorm(500,mean=0,sd=1)
+plot.ts(w, main="IID Noise")
+plota(w)
+```
+
+## Random Walk
+
+```{r}
+w = rnorm(500,mean=0,sd=1)
+s = cumsum(w)
+plot.ts(s, main="Random Walk")
+plota(s)
+```
+
