@@ -15,7 +15,7 @@ show_sidebar: false
 |      | W     | Introduction to R/RStudio/Quarto for Time Series | |
 | 2    | M     | **MLK (no class)** | |
 |      | W     | Zero-Mean Simple Models + Covariance |Slides 17-23 |
-| 3    | M     |  | | 
+| 3    | M     | Stationary + Autocorrelation function + MA(1) | | 
 |      | W     | |  | 
 | 4    | M     |  | | 
 |      | W    |  | | 
