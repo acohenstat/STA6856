@@ -10,6 +10,6 @@ show_sidebar: false
 
 | **Topic** | **R Code**  |
 |:-----------------------|:---:|
-| - Introduction to R + Time Series   | [.html/.qmd](rcodes/TimeSeriesR.html) | 
+| - Introduction to R + Time Series   | [.html/.qmd](rcodes/TimeSeriesR.html) | - Simple Zero Mean Models + aCF   | [.html/.qmd](rcodes/SimpleModels.html)
 
 
