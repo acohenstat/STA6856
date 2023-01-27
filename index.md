@@ -16,7 +16,7 @@ show_sidebar: false
 | 2    | M     | **MLK (no class)** | |
 |      | W     | Zero-Mean Simple Models + Covariance |Slides 17-23 |
 | 3    | M     | Stationary + Autocorrelation function + MA(1) | | 
-|      | W     | |  | 
+|      | W     | Autocorrelation function of some time series models  | | 
 | 4    | M     |  | | 
 |      | W    |  | | 
 | 5    | M    | | |

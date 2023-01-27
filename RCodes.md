@@ -12,5 +12,6 @@ show_sidebar: false
 |:-----------------------|:---:|
 | - Introduction to R + Time Series   | [.html/.qmd](rcodes/TimeSeriesR.html) 
 | - Simple Zero Mean Models + ACF   | [.html/.qmd](rcodes/SimpleModels.html)
+| - AutoCorrelation Function   | [.html/.qmd](rcodes/ACFExamples.html)
 
 
