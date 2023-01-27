@@ -17,11 +17,11 @@ show_sidebar: false
 |      | W     | Zero-Mean Simple Models + Covariance |Slides 17-23 |
 | 3    | M     | Stationary + Autocorrelation function + MA(1) | | 
 |      | W     | Autocorrelation function of some time series models  | | 
-| 4    | M     |  | | 
-|      | W    |  | | 
-| 5    | M    | | |
-|      | W    | |  | 
-| 6    | M    |  | |
+| 4    | M     |  HW1 + TS decomposition + Trend/Seasonality Estimation/Elimination | |
+|      | W     |   No meeting - Conference CSP 2023| | 
+| 5    | M     | | |
+|      | W     | |  | 
+| 6    | M     |  | |
 |      | W    |  | | 
 | 7    | M    |  | |
 |      | W    | | |
