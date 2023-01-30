@@ -14,4 +14,5 @@ show_sidebar: false
 | - Simple Zero Mean Models + ACF   | [.html/.qmd](rcodes/SimpleModels.html)
 | - AutoCorrelation Function   | [.html/.qmd](rcodes/ACFExamples.html)
 | - Template Assignments   | [.html/.qmd](rcodes/HW_template.html)
+| - Trend + Season Estimation and IID Testing   | [.html/.qmd](rcodes/TSDecomposition.html)
 
