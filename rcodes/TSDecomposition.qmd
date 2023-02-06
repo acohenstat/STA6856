@@ -13,11 +13,11 @@ The first step in analyzing any time series is plotting the data. Inspection of 
 
 $$ X_t = m_t + s_t + Y_t $$ where
 
--    $m_t$ is the trend component
+-   $m_t$ is the trend component
 
--    $s_t$ is the seasonal component
+-   $s_t$ is the seasonal component
 
--    $Y_t$ random noise component / Residuals
+-   $Y_t$ random noise component / Residuals
 
 if seasonality and noise fluctuations (variability) appear to increase with the level of the process (trend), then use a preliminary transformation of the data (natural logarithm,...).
 
@@ -89,10 +89,7 @@ strikes %>%
     autoplot(values)
 ```
 
-
-
-
-#### Trend Estimation: FFT 
+#### Trend Estimation: FFT
 
 ```{r}
 
@@ -105,7 +102,6 @@ strikes %>%
     group_by(series) %>%
     autoplot(values)
 ```
-
 
 #### Trend Estimation: Regression
 
@@ -122,7 +118,6 @@ strikes %>%
     autoplot(values)
 ```
 
-
 ## Seasonality Estimation
 
 ```{r}
@@ -134,11 +129,9 @@ r = deaths-estimate.season
 test(r)
 ```
 
-#### Test IDD hypothesis for the residuals
+#### Test IID hypothesis for the residuals
 
-
-Use the` Resid()` function to find the residuals. 
-
+Use the`Resid()` function to find the residuals.
 
 ```{r}
 # deaths
@@ -154,3 +147,54 @@ R.s= Resid(strikes$V1,data.model.s)
 test(R.s)
 
 ```
+
+### Trend and Seasonality Elimination using the Differencing operator
+
+#### JohnsonJohnson quarterly earnings data:
+
+```{r}
+plot.ts(JohnsonJohnson)
+acf(JohnsonJohnson,lag.max = 80)
+
+```
+
+Our data model is:
+
+$$
+X_t = m_t + s_t + Y_t
+$$
+
+where, the season is of *period 4* and the trend is assumed to be *quadratic.* Then,
+
+$$
+y_t = \nabla^2 \nabla_4 X_t
+$$
+
+rewrite this as:
+
+$$
+y_t= (1-B)^2(1-B^4)X_t 
+$$
+
+
+Eliminate Season
+
+```{r}
+
+deseason.data = diff(log(JohnsonJohnson),lag = 4)
+plot(deseason.data)
+```
+
+Eliminate Trend
+
+```{r}
+residual.data = diff(deseason.data,lag = 1,differences = 2)
+```
+
+Test IID for the residuals
+
+```{r}
+test(residual.data)
+```
+
+Since at least one test is reject the hypothesis of IID, therefore further analysis to be done.
