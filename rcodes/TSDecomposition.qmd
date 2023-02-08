@@ -154,20 +154,48 @@ test(R.s)
 
 ```{r}
 plot.ts(JohnsonJohnson)
-acf(JohnsonJohnson,lag.max = 80)
+acf(JohnsonJohnson,lag.max = 50)
+# Transformation
+library(car)
+L = powerTransform(JohnsonJohnson)
+Tjj = log(JohnsonJohnson)
 
+plot.ts(Tjj)
+acf(Tjj,lag.max = 50)
 ```
 
-Our data model is:
+We have a trend is assumed to be *quadratic. There is variance change.* Our data model is:
 
 $$
-X_t = m_t + s_t + Y_t
+X_t = m_t  + Y_t
 $$
 
-where, the season is of *period 4* and the trend is assumed to be *quadratic.* Then,
+```{r}
+# Estimations
+jj.data.model = c("log","trend",1)
+r.jj = Resid(JohnsonJohnson,jj.data.model)
+test(r.jj)
+```
+
+It looks like we have a season of *period 4* Then,
 
 $$
-y_t = \nabla^2 \nabla_4 X_t
+X_t = m_t  + S_t + Y_t
+$$
+
+and
+
+```{r}
+# Estimation 
+jj.data.model = c("log","trend",2,"season",4)
+r.jj = Resid(JohnsonJohnson,jj.data.model)
+test(r.jj)
+```
+
+By Elimination we have the following:
+
+$$
+y_t = \nabla^2 \nabla_4 \log(X_t)
 $$
 
 rewrite this as:
@@ -175,7 +203,6 @@ rewrite this as:
 $$
 y_t= (1-B)^2(1-B^4)X_t 
 $$
-
 
 Eliminate Season
 
