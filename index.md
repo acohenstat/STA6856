@@ -27,8 +27,9 @@ show_sidebar: false
 |      | W    | | |
 | 8    | M    |  |   |
 |      | W    |  |  |
-| 9    | M    |  | |
-|      | W    | | |
+| 9    | M    | No meeting - Mid-term Project | |
+|      | W    | No meeting - Mid-term Project | |
+||03/13-03/18|      **Spring Break**|| |  |
 | 10   | M    |  | |
 |      | W    |  | |
 | 11   | M    | | |
