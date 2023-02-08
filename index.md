@@ -14,13 +14,13 @@ show_sidebar: false
 | 1    | M     | Intro to Time Series|Slides 1-16 |
 |      | W     | Introduction to R/RStudio/Quarto for Time Series | |
 | 2    | M     | **MLK (no class)** | |
-|      | W     | Zero-Mean Simple Models + Covariance |Slides 17-23 |
-| 3    | M     | Stationary + Autocorrelation function + MA(1) | | 
-|      | W     | Autocorrelation function of some time series models  | | 
-| 4    | M     |  HW1 + TS decomposition + Trend/Seasonality Estimation/Elimination | |
-|      | W     |   No meeting - Conference CSP 2023| | 
-| 5    | M     | | |
-|      | W     | |  | 
+|      | W     | Zero-Mean Simple Models + Covariance |Slides 17-27 |
+| 3    | M     | Stationary + Autocorrelation function + MA(1) | 28-38 | 
+|      | W     | Autocorrelation function of some time series models  | 35-38| 
+| 4    | M     |  HW1 + TS decomposition + Trend/Seasonality Estimation/Elimination | 39-46|
+|      | W     |  No meeting - Conference CSP 2023| HW2 | 
+| 5    | M     | Differencing Operator + Examples with R | 47-52| 
+|      | W     |  | | 
 | 6    | M     |  | |
 |      | W    |  | | 
 | 7    | M    |  | |
