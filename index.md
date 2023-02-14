@@ -17,11 +17,11 @@ show_sidebar: false
 |      | W     | Zero-Mean Simple Models + Covariance |Slides 17-27 |
 | 3    | M     | Stationary + Autocorrelation function + MA(1) | 28-38 | 
 |      | W     | Autocorrelation function of some time series models  | 35-38| 
-| 4    | M     |  HW1 + TS decomposition + Trend/Seasonality Estimation/Elimination | 39-46|
-|      | W     |  No meeting - Conference CSP 2023| HW2 | 
+| 4    | M     | HW1 + TS decomposition + Trend/Seasonality Estimation/Elimination | 39-46|
+|      | W     | No meeting - Conference CSP 2023| HW2 | 
 | 5    | M     | Differencing Operator + Examples with R | 47-52| 
-|      | W     |  | | 
-| 6    | M     |  | |
+|      | W     | Feedback on HW2 | | 
+| 6    | M     |  ARMA modeling | |
 |      | W    |  | | 
 | 7    | M    |  | |
 |      | W    | | |
