@@ -20,9 +20,9 @@ show_sidebar: false
 | 4    | M     | HW1 + TS decomposition + Trend/Seasonality Estimation/Elimination | 39-46|
 |      | W     | No meeting - Conference CSP 2023| HW2 | 
 | 5    | M     | Differencing Operator + Examples with R | 47-52| 
-|      | W     | Feedback on HW2 | | 
-| 6    | M     |  ARMA modeling | |
-|      | W    |  | | 
+|      | W     | Stationary processes + ARMA(p,q) | 53-63 | 
+| 6    | M     | Feedback on HW2  | |
+|      | W    |  ARMA models | | 
 | 7    | M    |  | |
 |      | W    | | |
 | 8    | M    |  |   |
