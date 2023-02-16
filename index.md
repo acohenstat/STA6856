@@ -22,7 +22,7 @@ show_sidebar: false
 | 5    | M     | Differencing Operator + Examples with R | 47-52| 
 |      | W     | Stationary processes + ARMA(p,q) | 53-63 | 
 | 6    | M     | Feedback on HW2  | |
-|      | W    |  ARMA models | | 
+|      | W    |  Estimation Mean and ACF + ARMA models | 64-82 | 
 | 7    | M    |  | |
 |      | W    | | |
 | 8    | M    |  |   |
