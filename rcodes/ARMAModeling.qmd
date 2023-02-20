@@ -1,0 +1,188 @@
+---
+title: "ARMA Modeling"
+author: "Dr. Cohen"
+format: html
+self-contained: true
+editor: visual
+execute: 
+  warning: false
+  message: false
+---
+
+Time Series analysis using ARMA models can be done as follows:
+1. Plot the data / ACF and examine the characteristics
+2. data model (variance change, trend, seasonality)
+3. Transform and Eliminate / Estimate the components
+4. Test the residuals if IID 
+5. Select p and q for the ARMA(p,q) using PCAF and ACF
+6. Select the best
+
+
+## Estimation of the parameters
+
+ARMA(p,q) are stationary time series models given by:
+
+$$
+\Phi(B) X_t = \Theta(B) Z_t, \qquad Z_t \sim WN(0,\sigma^2)
+$$
+
+
+where $\Phi(B) = 1-\phi_1X_{t-1} - \ldots - \phi_pX_{t-p}$ and $\Theta(B) = 1+\theta_1Z_{t-1} + \ldots + \theta_qZ_{t-q}$ 
+
+### Simulate ARMA models
+
+#### MA(1) example
+
+```{r}
+library(itsmr)
+ma1 = arima.sim(model = list(ar=c(),ma=c(0.8)),n=200)
+plot.ts(ma1)
+acf(ma1,lag.max = 40)
+
+# Innovations estimator - MA(q)
+ia(ma1,q=1)
+```
+
+#### AR(1) example
+
+```{r}
+library(itsmr)
+ar1 = arima.sim(model = list(ar=c(0.4),ma=c()),n=200)
+plot.ts(ar1)
+acf(ar1,lag.max = 40)
+
+# yule-walker estimator - AR(p)
+yw(ar1,p=1)
+```
+
+
+#### ARMA(1,1) example
+
+```{r}
+library(itsmr)
+arma11 = arima.sim(model = list(ar=c(0.4),ma=c(0.5)),n=200)
+plot.ts(arma11)
+acf(arma11,lag.max = 40)
+
+# HR estimator - ARMA(p,q)
+hannan(arma11,p = 1,q = 1)
+```
+
+### MLE estimator 
+```{r}
+library(itsmr)
+arma11 = specify(ar=c(0.4),ma=c(0.5),sigma2=1)
+check(arma11)
+data.sim = sim(arma11,n=200)
+plot.ts(data.sim)
+acf(data.sim,lag.max = 40)
+
+# MLE estimator - ARMA(p,q)
+arma(data.sim,p=1,q=1)
+```
+
+
+## Example Dow Jones Utilities Index 1972
+
+```{r}
+plot.ts(dowj)
+acf(dowj,lag.max = 50)
+```
+
+Our data model:
+
+$X_t = m_t + Y_t$
+
+```{r}
+# differencing operator
+r = diff(dowj)
+mean(r)
+R = r - mean(r)
+test(R)
+```
+
+Some possible models are:
+- AR(1) or MA(1) or MA(2)
+- ARMA(1,1) or ARMA(1,2)
+
+```{r}
+# AR(1)
+ar1 = arma(x = R,p = 1,q=0)
+ma1 = arma(x = R,p = 0,q=1)
+ma2 = arma(x = R,p = 0,q=2)
+arma11 = arma(x = R,p = 1,q=1)
+arma12 = arma(x = R,p = 1,q=2)
+# autofit
+automodel = autofit(R)
+
+cbind(ar1=ar1$aicc,
+      ma1=ma1$aicc,
+      ma2=ma2$aicc,
+      arma11=arma11$aicc,
+      arma12=arma12$aicc,
+      automodel=automodel$aicc)
+```
+The best model in terms of AICC is AR(1) given by:
+
+$$
+ (1-0.45B)(\nabla X_t - 0.134) = Z_t, \qquad Z_t \sim WN(0,0.145) 
+$$
+
+Or we can rewrite it: $X_t - X_{t-1} = Y_t$
+
+$$
+Y_t = 0.134 + 0.45Y_t + Z_t
+$$
+
+We need to see if the the residuals of the model are iid?
+
+```{r}
+model = specify(ar=arma11$phi , ma=arma11$theta , sigma2 = arma11$sigma2)
+M= c("diff",1)
+rfit = Resid(x = dowj,M = M,a = model)
+test(rfit)
+```
+
+The AR(1) model is not adequate since the iid hypothesis was rejected.
+
+We fit ARMA(1,1) with AICC=75.13 and the model is adequate:
+
+The equation is:
+
+$$
+(1-0.77B)(\nabla X_t - 0.134) = Z_t -0.42Z_{t-1}, \quad Z_t \sim WN(0,0.142)
+$$
+The 95% CI for the parameters are:
+
+```{r}
+c(arma11$phi + 1.95 *arma11$se.phi,arma11$phi - 1.95* arma11$se.phi)
+c(arma11$theta + 1.95 *arma11$se.theta,arma11$theta - 1.95 *arma11$se.theta)
+```
+
+
+## Wine data
+
+```{r}
+plot.ts(wine)
+acf(wine)
+```
+
+We do have: trend (line) and seasonality (d=12)
+
+```{r}
+data.model = c("season",12,"trend",1)
+r = Resid(wine,M=data.model) # yt = xt - mt - st - 1.347
+test(r)
+# autofit
+bestmodel = autofit(r,p=0:2,q=0:2)
+# test iid for the fit
+model = specify(ar=bestmodel$phi , ma=bestmodel$theta , sigma2 = bestmodel$sigma2)
+rfit = Resid(x = wine,M = data.model,a = model)
+test(rfit)
+```
+
+We write the model:
+
+$$
+ X_t = 1.347 + m_t + s_t + 0.18X_{t-1} + 0.19X_{t-2} + Z_t, \quad Z_t \sim WN(0,30746.27)
+$$
