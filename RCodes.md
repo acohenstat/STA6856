@@ -15,4 +15,5 @@ show_sidebar: false
 | - AutoCorrelation Function   | [.html/.qmd](rcodes/ACFExamples.html)
 | - Template Assignments   | [.html/.qmd](rcodes/HW_template.html)
 | - Trend + Season Estimation and IID Testing   | [.html/.qmd](rcodes/TSDecomposition.html)
+| - ARMA(p,q) Modeling | [.html/.qmd](rcodes/ARMAModeling.html)
 

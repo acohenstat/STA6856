@@ -23,7 +23,7 @@ show_sidebar: false
 |      | W     | Stationary processes + ARMA(p,q) | 53-63 | 
 | 6    | M     | Feedback on HW2  | |
 |      | W    |  Estimation Mean and ACF + ARMA models | 64-82 | 
-| 7    | M    |  | |
+| 7    | M    | ARMA modeling | |
 |      | W    | | |
 | 8    | M    |  |   |
 |      | W    |  |  |
