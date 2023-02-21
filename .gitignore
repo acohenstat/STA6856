@@ -2,6 +2,6 @@
 .Rhistory
 .RData
 .Ruserdata
-rcodes/e/*.qmd
+rcodes/e/
 rcodes/tsdata/
 qmd/
