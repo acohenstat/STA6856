@@ -24,7 +24,7 @@ show_sidebar: false
 | 6    | M     | Feedback on HW2  | |
 |      | W    |  Estimation Mean and ACF + ARMA models | 64-82 | 
 | 7    | M    | ARMA modeling | |
-|      | W    | | |
+|      | W    | No meeting - ARMA modeling group work | |
 | 8    | M    |  |   |
 |      | W    |  |  |
 | 9    | M    | No meeting - Mid-term Project | |

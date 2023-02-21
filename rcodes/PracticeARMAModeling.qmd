@@ -1,0 +1,24 @@
+---
+title: "STA6856 Time Series"
+subtitle: "ARMA modeling"
+author: "Student Name"
+format: html
+self-contained: true
+execute: 
+  warning: false
+  message: false
+editor: visual
+---
+
+```{r}
+library(tsibble)
+library(tsibbledata)
+```
+
+Fit ARMA(p,q) models to the following time series data:
+
+1.  `lake`
+
+2.  `airpass`
+
+Post your work (HTML) on Canvas discussion board.

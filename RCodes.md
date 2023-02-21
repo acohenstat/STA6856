@@ -16,4 +16,4 @@ show_sidebar: false
 | - Template Assignments   | [.html/.qmd](rcodes/HW_template.html)
 | - Trend + Season Estimation and IID Testing   | [.html/.qmd](rcodes/TSDecomposition.html)
 | - ARMA(p,q) Modeling | [.html/.qmd](rcodes/ARMAModeling.html)
-
+| - ARMA(p,q) modeling group work | [.html/.qmd](rcodes/PracticeARMAModeling.html)
