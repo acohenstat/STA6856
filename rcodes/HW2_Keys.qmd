@@ -1,0 +1,179 @@
+---
+title: "HW2 Keys Time Series"
+author: "Dr. Cohen"
+format: html
+self-contained: true
+editor: visual
+execute: 
+  warning: false
+  message: false
+---
+
+```{r}
+# Load packages
+library(itsmr)
+library(tidyverse)
+library(tsibble)
+library(feasts)
+```
+
+
+# Number of international airline passengers, 1949 to 1960. 
+
+Plot the data: `airpass{itsmr}`
+
+```{r}
+# get data to tsibble format
+airpassts = airpass %>% 
+  as_tibble() %>%
+  mutate(mth=seq(yearmonth("1949 Jan"),yearmonth("1960 Dec"),1)) %>%
+  as_tsibble() 
+
+# plot the time series
+airpassts %>%
+  autoplot(value) + 
+  labs(y="Number of airline passengers",
+       title="Number of international airline passengers 1949 to 1960.")
+
+# plot the ACF
+airpassts %>%
+  ACF(value, lag_max = 140) %>%  
+  autoplot()
+```
+The series shows a upward trend and a season of 12 with variance change. I shall consider the following model:
+
+$$ X_t = m_t + s_t + Y_t $$ where
+
+-   $m_t$ is the trend component
+
+-   $s_t$ is the seasonal component
+
+-   $Y_t$ random noise component / Residuals
+
+## Transformation
+```{r}
+library(car)
+L = powerTransform(airpassts$value)
+L$roundlam
+
+airpassts %>%
+  mutate(valueT = log(value)) ->airpassts
+```
+the $\log$ transformation is appropriate to use. 
+
+## Trend Estimation with MA smoothing
+
+```{r}
+
+
+airpassts %>%
+  mutate(ma.trend3 = smooth.ma(valueT, 3),
+         ma.trend5 = smooth.ma(valueT, 5),
+         ma.trend7 = smooth.ma(valueT, 7),
+         ma.trend9 = smooth.ma(valueT, 9)) %>% # q=3 means averaging 2q+1 values
+  pivot_longer(cols =-c(mth,value),
+               names_to = "series",
+               values_to = "values") %>%
+    group_by(series) %>%
+    autoplot(values)
+
+
+airpassts = airpassts %>%
+  mutate(ma.trend7 = smooth.ma(valueT, 7))
+```
+
+The trend with $q=7$ or $q=9$ seems to be reasonable.
+
+
+#### Trend Estimation: Regression
+
+```{r}
+
+airpassts %>%
+  mutate(reg.trend1 = trend(valueT, 1),# 1 means polynmial of degree 1 
+         reg.trend2 = trend(valueT, 2)) %>% 
+  pivot_longer(cols =-c(mth,value),
+               names_to = "series",
+               values_to = "values") %>%
+    group_by(series) %>%
+    autoplot(values)
+
+airpassts = airpassts %>%
+  mutate(reg.trend1 = trend(valueT, 1))
+```
+
+I will consider a straight line trend.
+
+## Seasonality Estimation
+
+```{r}
+airpassts = airpassts %>%
+  mutate(season.value=season(valueT, d=12))
+```
+
+#### Plots the series and trend estimates
+```{r}
+airpassts %>%
+  pivot_longer(cols =-c(mth,value,season.value),
+               names_to = "series",
+               values_to = "values") %>%
+    group_by(series) %>%
+    autoplot(values)
+
+airpassts = airpassts %>%
+  mutate(reg.trend1 = trend(valueT, 1))
+```
+
+
+#### Test IID hypothesis for the residuals
+
+Use the`Resid()` function to find the residuals.
+
+```{r}
+# deaths
+data.model = c("log","season",12,"trend",1) # from examining the series
+R= Resid(airpass,data.model)
+# Test IDD
+test(R) # need to tests to fail to reject the null hypothesis
+
+```
+
+Further analysis is needed because the iid hypothesis was not rejected.
+
+### Trend and Seasonality Elimination using the Differencing operator 
+
+$$
+Y_t = \nabla \nabla_{12} \log(X_t)
+$$
+
+```{r}
+R = diff(diff(log(airpass),lag = 12,differences = 1))
+test(R)
+```
+
+Further analysis is needed because the IID hypothesis was not rejected.
+
+
+## Level of Lake Huron, 1875 to 1972.
+
+lake{itsmr}: Level
+
+
+```{r}
+# get data to tsibble format
+lakets = lake %>% 
+  as_tibble() %>%
+  mutate(year=1875:1972) %>%
+  as_tsibble(index=year) 
+
+# plot the time series
+lakets %>%
+  autoplot(value) + 
+  labs(y="Number of airline passengers",
+       title="Number of international airline passengers 1949 to 1960.")
+
+# plot the ACF
+lakets %>%
+  ACF(value, lag_max = 140) %>%  
+  autoplot()
+```
