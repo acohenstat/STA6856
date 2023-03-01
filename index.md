@@ -26,7 +26,7 @@ show_sidebar: false
 | 7    | M    | ARMA modeling | |
 |      | W    | No meeting - ARMA modeling group work | [.html](rcodes/PracticeARMAModeling.html)|
 | 8    | M    | ARIMA models | 94-99  |
-|      | W    |  |  |
+|      | W    | ARIMA models in R |  |
 | 9    | M    | No meeting - Mid-term Project | |
 |      | W    | No meeting - Mid-term Project | |
 |      |     | **Spring Break** | |
