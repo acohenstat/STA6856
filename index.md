@@ -25,7 +25,7 @@ show_sidebar: false
 |      | W    |  Estimation Mean and ACF + ARMA models | 64-82 | 
 | 7    | M    | ARMA modeling | |
 |      | W    | No meeting - ARMA modeling group work | [.html](rcodes/PracticeARMAModeling.html)|
-| 8    | M    |  |   |
+| 8    | M    | ARIMA models | 94-99  |
 |      | W    |  |  |
 | 9    | M    | No meeting - Mid-term Project | |
 |      | W    | No meeting - Mid-term Project | |

@@ -1,0 +1,150 @@
+---
+title: "ARIMA Models"
+author: "Dr. Cohen"
+format: html
+self-contained: true
+editor: visual
+execute: 
+  warning: false
+  message: false
+---
+
+Time Series analysis using AutoRegressive Integrated Moving Average models is appropriate for stationary data. The ARIMA(p,d,q) is given by:
+
+$$
+\phi(B) (1-B)^d X_t = \theta(B) Z_t, \qquad Z_t \sim WN(0,\sigma^2)
+$$
+
+where $\Phi(B) = 1-\phi_1X_{t-1} - \ldots - \phi_pX_{t-p}$ and $\Theta(B) = 1+\theta_1Z_{t-1} + \ldots + \theta_qZ_{t-q}$
+
+### Quarterly U.S. GNP Gross National Product
+
+```{r}
+library(car)
+library(ltsa)
+library(itsmr)
+library(astsa)
+library(itsmr)
+library(forecast)
+
+# plot
+plot(gnp,type="o")
+# ACF plot
+acf(gnp,lag.max = 100)
+# data model
+M=c("diff",1)
+r = Resid(gnp,M)
+test(r)
+```
+
+
+### Test stationary
+
+```{r}
+# Augmented Dickey-Fuller Test
+# H0: X_t is a non-stationary time series
+# H1: X_t is a stationary time series
+
+library(aTSA)
+adf.test(r)
+# Results in stationary data. No differencing is needed, then d=0.
+```
+
+
+### ARIMA models
+
+```{r}
+# p = 1, 2
+# q = 1, 2, 3
+# ARIMA(2,0,1) == ARMA(2,1)
+a21=arima(x = r,order = c(2,0,1))
+test(a21$residuals)
+
+# ARIMA(1,0,1) == ARMA(1,1)
+a11=arima(x = r,order = c(1,0,1))
+test(a11$residuals)
+
+# ARIMA(2,0,0) == ARMA(2,0)
+a2=arima(x = r,order = c(2,0,0))
+test(a2$residuals)
+
+#abest=autofit(r,p = 0:2,q=0:2)
+#test(abest)
+```
+
+We will try a transformation to reduce the effect of variance change.
+
+```{r}
+l=powerTransform(gnp)
+l$roundlam
+## we can use log() transformation
+
+plot(log(gnp),type="o")
+acf(log(gnp),lag.max = 200)
+# data model
+M=c("log","diff",1)
+r = Resid(gnp,M)
+test(r)
+# Stationary
+adf.test(r) # pvalue <0.05 => data is stationary
+
+
+# ARIMA(1,0,1) == ARMA(1,1)
+arma11=arima(x = r,order = c(1,0,1))
+test(arma11$residuals)
+
+# ARIMA(2,0,1) == ARMA(2,1)
+arma21=arima(x = r,order = c(2,0,1))
+test(arma21$residuals)
+
+# ARIMA(2,0,0) == ARMA(2,0) == AR(2)
+ar2=arima(x = r,order = c(2,0,0))
+test(ar2$residuals)
+
+# ARIMA(1,0,2) == ARMA(1,2)
+arma12=arima(x = r,order = c(1,0,2))
+test(arma12$residuals)
+
+
+# ARIMA(0,0,2) == MA(2)
+ma2=arima(x = r,order = c(0,0,2))
+test(ma2$residuals)
+
+
+## Comparing AICs
+c(MA2=ma2$aic, ARMA12=arma12$aic, ARMA21=arma21$aic)
+
+```
+
+
+The equation of MA(2):
+
+$$
+(1-B)\log(X_t) = 0.3Z_{t-1} + 0.2Z_{t-2} + Z_t, \qquad Z_t \sim WN(0,8.919e-05)
+$$
+
+### Example Quarterly Time Series of the Number of Australian Residents
+
+```{r}
+
+plot.ts(austres, type="o")
+plota(austres)
+     
+
+M=c("diff",1)
+e = Resid(austres,M)
+test(e)
+
+adf.test(e)
+
+a1=arima(x = austres,order = c(2,1,2))
+test(a1$residuals)
+
+```
+
+
+The equation of ARIMA(2,1,2):
+
+$$
+(1-0.6843B-0.3121B^2)(1-B)\log(X_t) = (1 - 0.1961B  -0.2975B^2)Z_t, \qquad Z_t \sim WN(0,99.47)
+$$
