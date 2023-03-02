@@ -17,4 +17,4 @@ show_sidebar: false
 | - Trend + Season Estimation and IID Testing   | [.html/.qmd](rcodes/TSDecomposition.html)
 | - ARMA(p,q) Modeling | [.html/.qmd](rcodes/ARMAModeling.html)
 | - ARMA(p,q) modeling group work | [.html/.qmd](rcodes/PracticeARMAModeling.html)
-  | - ARIMA(p,d,q) modeling | [.html/.qmd](rcodes/ARIMAmodeling.html)
+  | - ARIMA(p,d,q) modeling | [.html/.qmd](rcodes/ARIMAModeling.html)
