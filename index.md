@@ -30,10 +30,10 @@ show_sidebar: false
 | 9    | M    | No meeting - Mid-term Project | |
 |      | W    | No meeting - Mid-term Project | |
 |      |     | **Spring Break** | |
-| 10   | M    |  | |
-|      | W    |  | |
-| 11   | M    | | |
-|      | W    |   | |
+| 10   | M    | Review the Midterm Project | |
+|      | W    | SARIMA models | |
+| 11   | M    | SARIMA models - R Examples| |
+|      | W    | No meeting - SARIMA modeling group work   | |
 | 12   | M    |  | |
 |      | W    |  | |
 | 13   | M    |  | |
