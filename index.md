@@ -34,12 +34,12 @@ show_sidebar: false
 |      | W    | SARIMA models | |
 | 11   | M    | SARIMA models - R Examples| |
 |      | W    | No meeting - SARIMA modeling group work   | |
-| 12   | M    |  | |
+| 12   | M    | SARIMA models - R Examples | |
+|      | W    | Forecasting | |
+| 13   | M    |   | |
+|      | W    |   | |
+| 14   | M    |   | |
 |      | W    |  | |
-| 13   | M    |  | |
-|      | W    | | |
-| 14   | M    |  | |
-|      | W    | | |
 | 15   | M    |  | |
 |      | W    |  | |
 | 16   | M-W  |  | | 
