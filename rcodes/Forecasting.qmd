@@ -1,5 +1,5 @@
 ---
-title: "SARIMA Models"
+title: "Forecasting Models"
 author: "Dr. Cohen"
 format: html
 self-contained: true
@@ -9,11 +9,13 @@ execute:
   message: false
 ---
 
-Time Series analysis using Seasonal AutoRegressive Integrated Moving Average models. The SARIMA(p,d,q)x(P,D,Q)s is given by:
+This lecture will cover:
 
-$$
-\phi(B) \Phi(B^s) (1-B^s)^D (1-B)^d X_t = \theta(B) \Theta(B^s) Z_t, \qquad Z_t \sim WN(0,\sigma^2)
-$$
+-   ARAR algorithm for forecasting
+
+-   Holt- Winters exponential smoothing algorithm
+
+-   SARIMA models for forecasting
 
 ### Chicken Data
 
@@ -121,7 +123,7 @@ $$
 ## Forecasting with Time Series
 
 ```{r}
-chicken_train = chicken[1:178]
+chicken_train = chicken[1:170]
 
 
 # SARIMA (1,1,1)x(1,1,1)12
@@ -156,23 +158,37 @@ fit5 = arima(chicken_train,
 Forecasting using the forecast function.
 
 ```{r}
-f1 = aTSA::forecast(object = fit1,lead = 2,output = FALSE)
-f2 = aTSA::forecast(object = fit2,lead = 2,output = FALSE)
-f3 = aTSA::forecast(object = fit3,lead = 2,output = FALSE)
-f4 = aTSA::forecast(object = fit4,lead = 2,output = FALSE)
-f5 = aTSA::forecast(object = fit5,lead = 2,output = FALSE)
-f.auto = aTSA::forecast(object = bestmodel,lead = 2,output = FALSE)
+f1 = aTSA::forecast(object = fit1,lead = 10,output = FALSE)
+f2 = aTSA::forecast(object = fit2,lead = 10,output = FALSE)
+f3 = aTSA::forecast(object = fit3,lead = 10,output = FALSE)
+f4 = aTSA::forecast(object = fit4,lead = 10,output = FALSE)
+f5 = aTSA::forecast(object = fit5,lead = 10,output = FALSE)
+f.auto = aTSA::forecast(object = bestmodel,lead = 10,output = FALSE)
 ```
+
+
+
+### ARAR algorithm for forecasting
+
+```{r}
+arar.prd = arar(chicken, h=10)
+HWmodel = HoltWinters(chicken,seasonal = "mult")
+HW.prd =forecast::forecast(HWmodel,10)
+```
+
 
 Evaluate the performance of the forecasting:
 
 ```{r}
-MAPE1 = mean(abs(chicken[179:180]-f1[,2])/chicken[179:180])*100
-MAPE2 = mean(abs(chicken[179:180]-f2[,2])/chicken[179:180])*100
-MAPE3 = mean(abs(chicken[179:180]-f3[,2])/chicken[179:180])*100
-MAPE4 = mean(abs(chicken[179:180]-f4[,2])/chicken[179:180])*100
-MAPE5 = mean(abs(chicken[179:180]-f5[,2])/chicken[179:180])*100
-MAPEauto = mean(abs(chicken[179:180]-f.auto[,2])/chicken[179:180])*100
+library(Metrics)
+MAPE1 = mape(chicken[171:180],f1[,2])*100
+MAPE2 = mape(chicken[171:180],f2[,2])*100
+MAPE3 = mape(chicken[171:180],f3[,2])*100
+MAPE4 = mape(chicken[171:180],f4[,2])*100
+MAPE5 = mape(chicken[171:180],f5[,2])*100
+MAPEauto = mape(chicken[171:180],f.auto[,2])*100
+MAPEarar = mape(chicken[171:180],arar.prd$pred)*100
+MAPEhw = mape(chicken[171:180],HW.prd$mean)*100
 
 
 MAPEs = c(fit1_mape = MAPE1,
@@ -180,38 +196,14 @@ MAPEs = c(fit1_mape = MAPE1,
           fit3_mape = MAPE3,
           fit4_mape = MAPE4,
           fit5_mape = MAPE5,
-          fitauto_mape = MAPEauto)
+          fitauto_mape = MAPEauto,
+          arar.model = MAPEarar,
+          hw.model = MAPEhw)
 MAPEs
 ```
 
-### Wine Data: using Fixed Argument in arima()
 
-```{r}
-plot(wine,type="o")
-# ACF plot
-acf(wine,lag.max = 100)
-# data model
-M=c("diff",1,"diff",12)
-r = Resid(sqrt(wine),M) # sqrt based on Box-Cox Transformation
-test(r)
-adf.test(r)
-# d=1 and D=1
-# p = 0 1 2 3 4 7 11
-# P = 0 1
-# q = 0 1 5 10
-# Q = 0 1 
-
-automodel = auto.arima(y = sqrt(wine),trace = TRUE, seasonal = TRUE)
-
-fit1 = arima(wine, order = c(2,1,5) ,
-            seasonal = list(order=c(0,1,1),period=12), fixed = c(NA,0,0,0,NA,0,0,NA))
-test(fit1$residuals)
-confint(fit1)
-
-```
-
-
-### US employment data 
+### US employment data
 
 ```{r}
 library(fpp3)
@@ -240,14 +232,41 @@ Q = c(0,1)
 
 all = expand_grid(p,P,q,Q)
 
+# this function fit a SARIM model, forecast, and calculate the mape
 fit = function(x,p,d,q,P,D,Q,s,h){
-x_train = x[1:n-h+1]  
-ft = arima(x, order = c(p,d,q) ,
-            seasonal = list(order=c(P,D,Q),period=s))
-prd = predict(ft,10)$pred[1:h]
-MAPE(prd,)
-}
-empl_data %>%
-  map
-```
+# x train
+x_train = x[1:I(length(x)-h)]  
+# fit the model
+ft = arima(x_train, 
+           order = c(p,d,q) ,
+          seasonal = list(order=c(P,D,Q),period=s))
+# predict the h ahead point using SARIMA
+prd = predict(ft,h)$pred[1:h]
 
+# fit and predict using Holt-Winters
+HWmodel = HoltWinters(ts(x,start=1,frequency = s),seasonal = "mult")
+prdhw = forecast::forecast(HWmodel,h)
+
+# fit and predict using ARAR
+prdarar = arar(x,h,opt=0)
+
+# actual data
+actual = x[I(length(x)-h+1):length(x)]
+# return the mape
+return(c(sarima=100*mape(actual,prd),
+         arar = 100*mape(actual,prdarar$pred),
+         hw = 100*mape(actual,prdhw$mean)))
+}
+
+fit(chicken,1,1,1,1,1,1,12,10)
+fit(chicken,1,1,1,2,1,1,12,10)
+fit(chicken,2,1,1,0,1,1,12,10)
+fit(chicken,1,1,1,0,1,1,12,10)
+fit(chicken,1,1,0,0,1,1,12,10)
+
+fit(us_empl$Employed,1,1,1,1,1,1,12,12)
+fit(us_empl$Employed,1,1,1,1,1,0,12,5)
+
+fit(wine,1,1,1,1,1,0,12,5)
+fit(AirPassengers,1,1,1,1,1,0,12,5)
+```

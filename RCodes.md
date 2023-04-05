@@ -19,3 +19,4 @@ show_sidebar: false
 | - ARMA(p,q) modeling group work | [.html/.qmd](rcodes/PracticeARMAModeling.html)
 | - ARIMA(p,d,q) modeling | [.html/.qmd](rcodes/ARIMAModeling.html)
 | - SARIMA(p,d,q)x(P,D,Q)s modeling | [.html/.qmd](rcodes/SARIMA.html)
+| - Forecasting | [.html/.qmd](rcodes/Forecasting.html)
