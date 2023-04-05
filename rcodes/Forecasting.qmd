@@ -166,8 +166,6 @@ f5 = aTSA::forecast(object = fit5,lead = 10,output = FALSE)
 f.auto = aTSA::forecast(object = bestmodel,lead = 10,output = FALSE)
 ```
 
-
-
 ### ARAR algorithm for forecasting
 
 ```{r}
@@ -175,7 +173,6 @@ arar.prd = arar(chicken, h=10)
 HWmodel = HoltWinters(chicken,seasonal = "mult")
 HW.prd =forecast::forecast(HWmodel,10)
 ```
-
 
 Evaluate the performance of the forecasting:
 
@@ -201,7 +198,6 @@ MAPEs = c(fit1_mape = MAPE1,
           hw.model = MAPEhw)
 MAPEs
 ```
-
 
 ### US employment data
 
