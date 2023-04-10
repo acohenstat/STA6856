@@ -1,0 +1,119 @@
+---
+title: "Regression with ARMA Errors"
+author: "Dr. Cohen"
+format: html
+self-contained: true
+editor: visual
+execute: 
+  warning: false
+  message: false
+---
+
+This lecture will cover:
+
+-   Regression with ARMA Errors
+
+The regression model with ARMA errors is given by:
+
+$$
+Y_t = \beta_{0t} + \beta_{1t} X_{1t} + \ldots + \beta_{pt} X_{pt} + \varepsilon_t
+$$
+
+where $\varepsilon_t$ is an ARMA(p,q) time series model:
+
+$$
+\phi(B)\varepsilon_t = \theta(B) Z_t 
+$$
+
+$Z_t$ is a white noise.
+
+### US Change Data
+
+Daily air quality measurements in New York, May to September 1973.
+
+```{r}
+library(itsmr)
+library(astsa)
+library(forecast)
+library(fpp3)
+
+autoplot(us_change,Consumption) +
+  xlab("Year") + ylab("") + 
+  ggtitle("Quarterly changes in US consumption")
+
+autoplot(us_change,Income) +
+  xlab("Year") + ylab("") + 
+  ggtitle("Quarterly changes in US Personal Income")
+
+fit = auto.arima(us_change$Consumption, 
+                 xreg=us_change$Income)
+fit
+```
+
+The equation of the model:
+
+$$
+Y_t = 0.5949 + 0.1976 Income_t + \varepsilon_t
+$$
+and
+$$
+\varepsilon_t = 0.7\varepsilon_{t-1} -0.62 Z_{t-1} + 0.21 Z_{t-2} + Z_t
+$$
+
+Overall,
+
+$$
+Y_t = 0.5949 + 0.1976 Income_t + 0.7\varepsilon_{t-1} -0.62 Z_{t-1} + 0.21 Z_{t-2} + Z_t
+$$
+
+#### Type of Residuals
+```{r}
+## regression residuals
+test(residuals(fit,type="regression"))
+
+## ARMA residuals -innovation-
+test(residuals(fit,type="innovation"))
+```
+
+### Air Quality data
+
+```{r}
+summary(airquality)
+
+fit.temp = auto.arima(y = airquality$Temp, 
+                      xreg = cbind(airquality$Wind,airquality$Ozone))
+fit.temp
+```
+
+The equation
+
+$$
+y_t = -0.13 Wind + 0.072 Ozone + \varepsilon_t 
+$$
+
+
+where
+
+$$
+(1+0.58B+0.28B^2)(1-B)\varepsilon_t = 0.023 + Z_t
+$$
+
+
+
+#### Lake Data
+
+```{r}
+plot(lake,type="o")
+t = 1:98
+fit.lake = auto.arima(lake, xreg = t)
+fit.lake
+```
+Equation:
+
+$$
+y_t = 10.08 -0.02t + 0.65\varepsilon_{t-1} + 0.35 Z_{t-1} + Z_t
+$$
+```{r}
+test(residuals(fit.lake,"innovation"))
+```
+
