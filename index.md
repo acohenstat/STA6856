@@ -38,8 +38,8 @@ show_sidebar: false
 |      | W    | Forecasting | |
 | 13   | M    | Regression with ARMA(p,q) errors  | |
 |      | W    | HW5 - No meeting  | [.html/.qmd](rcodes/HW3.html)|
-| 14   | M    |   | |
-|      | W    |   | |
+| 14   | M    | GARCH Models  | |
+|      | W    | Review  | |
 | 15   | M    | No meeting - Final Project  | |
 |      | W    | No meeting - Final Project  | |
 | 16   | M-W  |  | | 

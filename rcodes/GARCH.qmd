@@ -1,0 +1,131 @@
+---
+title: "GARCH Models"
+author: "Dr. Cohen"
+format: html
+self-contained: true
+editor: visual
+execute: 
+  warning: false
+  message: false
+---
+
+This lecture will cover:
+
+-   The ARCH (autoregressive conditional heteroscedasticity) model
+-   The GARCH model (Generalized ARCH)
+
+Financial time series data are special because of their features, which include tail heaviness, asymmetry, volatility, and serial dependence without correlation.
+
+Let consider $P_t$ the price of a stock of other financial asset at time $t$, then we can define the log return by $Z_t = log(P_t) − log(P_{t−1})$ A model of the return series should support the fact that this data has a conditional variance $h_t$ of $Z_t$ is not independent of past value of $Z_t$.
+
+The idea of the ARCH model is to incorporate the sequence $h_t$ in the model by:
+
+$$
+Z_t =\sqrt{h_t e_t}, \qquad e_t \sim IIDN(0, 1)
+$$
+
+where $h_t$ is known as the **volatility** and related to the past values of \$Z_t\$ via the **ARCH(p)** model:
+
+$$
+h_t = \alpha_0 + \sum_{i=1}^{p} \alpha_i Z^2_{t-i} 
+$$
+
+The **GARCH(p,q)** model is given by:
+
+$$
+h_t = \alpha_0 + \sum_{i=1}^{p} \alpha_i Z^2_{t-i} + \sum_{j=1}^{q} \beta_j h_{t-j}
+$$
+
+$\alpha_0 > 0 \text{ and } \alpha_i ≥ 0, \beta_j ≥ 0$
+
+### Google Share Price
+
+```{r}
+library(rugarch) # run GARCH models
+library(quantmod) # upload financial data from Yahoo Finance
+library(itsmr)
+library(aTSA)
+
+getSymbols("GOOG", from = as.Date("2015-01-01"), to = as.Date("2023-3-30"))
+
+# Select Open Price
+op=GOOG$GOOG.Open
+# plot Time Series
+plot(op)
+
+# Return data 
+R= diff(log(as.numeric(op)))
+
+# Plot Return
+plot(R)
+
+# Plot ACF 
+acf(R,lag.max = 50)
+
+# Plot ACF of R^2
+acf(R^2, lag.max = 50)
+```
+
+## GARCH model
+
+```{r}
+
+# Specify the model
+spec1 = ugarchspec()
+spec1
+
+# Mean Model  AR(1)
+spec1 = ugarchspec(mean.model = list(armaOrder=c(1,0)))
+spec1
+
+# Mean Model- EWMA
+spec2 = ugarchspec(mean.model = list(armaOrder=c(0,0)),variance.model = list(garchOrder =c(2,0)))
+spec2
+
+# Fit GARCH
+ugfit = ugarchfit(spec = spec2, data = R)
+ugfit
+
+# Forecast with GARCH
+ugf = ugarchforecast(ugfit, n.ahead = 10)
+ugf
+
+plot(ugf@forecast$sigmaFor,type="l")
+plot(ugf@forecast$seriesFor,type="l")
+
+
+```
+
+###  NYSE data
+
+```{r}
+library(astsa)
+
+plot(nyse,type="o")
+
+plota(nyse)
+
+plota(nyse^2)
+
+spec2 = ugarchspec(mean.model = list(armaOrder=c(1,0)),
+
+                   variance.model = list(garchOrder =c(1,1)))
+
+spec2
+
+# Fit GARCH
+
+ugfit = ugarchfit(spec = spec2, data = nyse)
+
+ugfit
+
+# Forecast with GARCH
+
+ugf = ugarchforecast(ugfit, n.ahead = 10)
+
+ugf
+
+plot(ugf@forecast$sigmaFor,type="l")
+
+plot(ugf@forecast$seriesFor,type="l")
+```

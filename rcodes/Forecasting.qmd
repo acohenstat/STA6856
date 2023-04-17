@@ -169,8 +169,8 @@ f.auto = aTSA::forecast(object = bestmodel,lead = 10,output = FALSE)
 ### ARAR algorithm for forecasting
 
 ```{r}
-arar.prd = arar(chicken, h=10)
-HWmodel = HoltWinters(chicken,seasonal = "mult")
+arar.prd = arar(chicken_train, h=10)
+HWmodel = HoltWinters(ts(chicken_train,start=1,frequency = 12),seasonal = "mult")
 HW.prd =forecast::forecast(HWmodel,10)
 ```
 
@@ -240,11 +240,11 @@ ft = arima(x_train,
 prd = predict(ft,h)$pred[1:h]
 
 # fit and predict using Holt-Winters
-HWmodel = HoltWinters(ts(x,start=1,frequency = s),seasonal = "mult")
+HWmodel = HoltWinters(ts(x_train,start=1,frequency = s),seasonal = "mult")
 prdhw = forecast::forecast(HWmodel,h)
 
 # fit and predict using ARAR
-prdarar = arar(x,h,opt=0)
+prdarar = arar(x_train,h,opt=0)
 
 # actual data
 actual = x[I(length(x)-h+1):length(x)]

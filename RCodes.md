@@ -21,4 +21,5 @@ show_sidebar: false
 | - SARIMA(p,d,q)x(P,D,Q)s modeling | [.html/.qmd](rcodes/SARIMA.html)
 | - Forecasting | [.html/.qmd](rcodes/Forecasting.html)
 | - Regression with ARMA errors | [.html/.qmd](rcodes/RegARMA.html)
+| - GARCH models | [.html/.qmd](rcodes/GARCH.html)
 
