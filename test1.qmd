@@ -1,0 +1,41 @@
+---
+title: "Practice Assignment 1 - R"
+author: "Dr. Cohen"
+format: html
+editor: visual
+self-contained: true
+execute: 
+  warning: false
+  message: false
+---
+
+## Libraries
+
+Libraries or packages are collections of functions, datasets, packages
+
+The first thing we do is to load the necessary packages.
+
+```{r}
+library(tidyverse)
+library(dslabs)
+library(ggthemes)
+library(ggrepel)
+library(tsibble)
+library(tsibbledata)
+library(feasts)
+```
+
+## Tidyverse Packages
+
+```{r}
+hist(rnorm(1000))
+
+```
+
+We can observe that the histogram looks like a Normal/bell-shaped distribution.....
+
+ARMA model:
+
+$$
+\phi(p) X_t = \theta(q)Z_t  
+$$

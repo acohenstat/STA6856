@@ -12,7 +12,6 @@ Simple models are the basics blocks for more complicated time series models
 library(itsmr)
 ```
 
-
 ## Normal Noise - iid
 
 ```{r}
@@ -29,4 +28,3 @@ s = cumsum(w)
 plot.ts(s, main="Random Walk")
 plota(s)
 ```
-

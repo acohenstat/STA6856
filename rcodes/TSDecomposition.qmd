@@ -108,7 +108,7 @@ strikes %>%
 ```{r}
 
 strikes %>%
-  mutate(reg.trend1 = trend(V1, 1),# 1 means polynmial of degree 1 
+  mutate(reg.trend1 = trend(V1, 1),# 1 means polynmial of degree 1
          reg.trend2 = trend(V1, 2),
          reg.trend3 = trend(V1, 3)) %>% 
   pivot_longer(cols =-Year,

@@ -9,17 +9,13 @@ execute:
   message: false
 ---
 
-In practical problems, we do not start with a model, but with observed data
-$(x_1, x_2, \ldots , x_n)$. **To assess the degree of dependence** in the data and to select a model for the data, one of the important tools we use is the sample
-autocorrelation function (Sample ACF). A few remarks:
+In practical problems, we do not start with a model, but with observed data $(x_1, x_2, \ldots , x_n)$. **To assess the degree of dependence** in the data and to select a model for the data, one of the important tools we use is the sample autocorrelation function (Sample ACF). A few remarks:
 
--   The sample autocorrelation function (ACF) can be computed for any data
-    set and is not restricted to observations from a stationary time series.
+-   The sample autocorrelation function (ACF) can be computed for any data set and is not restricted to observations from a stationary time series.
 
 -   For data containing a Trend, $|\hat{\rho}(h)|$will display slow decay as h increases.
 
--   For data containing a substantial deterministic periodic component,
-    $|\hat{\rho}(h)|$ will exhibit similar behavior with the same periodicity
+-   For data containing a substantial deterministic periodic component, $|\hat{\rho}(h)|$ will exhibit similar behavior with the same periodicity
 
 ```{r}
 # Load packages
@@ -52,6 +48,8 @@ pop %>%
   ACF(V1, lag_max = 20) %>%  
   autoplot()
 
+acf(pop$V1,lag.max = 20)
+
 ```
 
 ### IID Noise
@@ -59,6 +57,7 @@ pop %>%
 ```{r}
 
 w = rnorm(100,mean=0,sd=1)
+acf(rnorm(100,mean=0,sd=1),lag.max = 100)
 
 w = w %>% 
   as_tibble() %>%
@@ -72,9 +71,8 @@ w %>%
   ACF(value, lag_max = 100) %>% 
   autoplot()
 
+acf(rnorm(100,mean=0,sd=1),lag.max = 100)
 ```
-
-
 
 ### Monthly totals of international airline passengers 1949-1960
 
@@ -86,7 +84,7 @@ A = read.table("http://users.stat.umn.edu//~kb/classes/5932/data/airpass.txt", h
 
 A = A %>% 
   as_tibble() %>%
-  mutate(mth = rep(yearmonth("1949 Jan")+0:143)) %>%
+  mutate(mth = yearmonth("1949 Jan")+0:143) %>%
   as_tsibble()
 
 A %>%
@@ -94,12 +92,10 @@ A %>%
   labs(y="Total International of Airline Passengers")
   
 A %>%
-  ACF(V1, lag_max = 144) %>% 
+  ACF(V1, lag_max = 50) %>% 
   autoplot()
 
 ```
-
-
 
 ### Monthly beer production, Australia in Megalitres - Jan. 1956 - Feb 1991
 
@@ -124,17 +120,13 @@ B %>%
 
 ```
 
-
-
 ## Theoretical ACF for MA(1) Time Series Model
 
 The Moving Average model of order one is given:
 
-
 $$ 
 X_t = \theta Z_{t-1} + Z_t
-$$
-where $Z_t \sim WN(0, \sigma^2)$
+$$ where $Z_t \sim WN(0, \sigma^2)$
 
 We can show that the ACF $\rho(h)$ of an MA(1) is:
 
@@ -147,14 +139,14 @@ $$
 ```{r}
 theta= 0.8
 # generate ACF for MA(0.8)
-ACF_Theory = ARMAacf(ma =theta, lag.max = 20)
+ACF_Theory = ARMAacf(ar =theta, lag.max = 20)
 ACF_Theory
 
 # Plot ACF
 plot((0:20),ACF_Theory,type="h", xlab = "Lag")
 
 #1. Specify the Model using this function
-modelMA1=specify(ma=theta, sigma2 = 1)
+modelMA1=specify(ar=theta, sigma2 = 1)
 #2. generate MA observations with
 datasim=sim(modelMA1,n = 100)
 
@@ -162,5 +154,3 @@ datasim=sim(modelMA1,n = 100)
 a=acf(datasim)
 a
 ```
-
-

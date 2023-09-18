@@ -1,0 +1,20 @@
+---
+title: "STA6856 Time Series"
+subtitle: "Assignment 2"
+author: "Student Name"
+format: html
+self-contained: true
+execute: 
+  warning: false
+  message: false
+editor: visual
+---
+
+|                     | Comments: |
+|---------------------|-----------|
+| ![](tsdata/TS2.png) |           |
+| ![](tsdata/TS3.png) |           |
+| ![](tsdata/TS4.png) |           |
+| ![](tsdata/TS5.png) |           |
+| ![](tsdata/TS6.png) |           |
+| ![](tsdata/TS9.png) |           |

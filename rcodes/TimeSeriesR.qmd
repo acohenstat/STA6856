@@ -64,12 +64,13 @@ filter(new_table, rate <0.7)
 The pipe operator`%>%`. With dplyr we can do a series of operations, for example select and then filter using the pipe operator.
 
 ```{r}
-murders %>% 
+murders %>%
   select(state,region,rate) %>% 
   filter(rate<0.7)
 
 # change rate threshold
 murders %>% 
+  #drop_na() %>%
   select(state, region, rate) %>% 
   filter(rate < 0.5)
 
@@ -121,16 +122,23 @@ heights %>%
 # let's compute the median murder rate in the four regions of the country:
 murders %>%
   group_by(region) %>%
-  summarise(median.rate=median(rate))
+  summarise(median.rate=mean(rate))
 ```
+
+\
 
 ```{r}
 # apply the same function to each element of a vector 
-compute_s_n <- function(n){
+compute_s_n = function(n){
   x <- 1:n
   sum(x)
 }
 sn = map_dbl(c(1,5,10,15,20), compute_s_n)
+
+myf =function(n){
+  sum(1:n)
+}
+
 ```
 
 #### Visualization using ggplot2
@@ -201,14 +209,15 @@ Working on `tsibble` objects:
 data(PBS)
 # Let's look at the Cost time series 
 
-costa10 = PBS %>% 
+costa10 = PBS |> #naive pipe operator
   filter(ATC2=="A10") %>% 
   select(Cost) %>% 
   summarise(TotalC = sum(Cost)) %>% 
-  mutate(CostM=TotalC/1e6)
+  mutate(CostM=TotalC/1e6) 
 
-  autoplot(costa10,CostM) + 
-  labs(title = "Monthly Total Cost A10 Prescription", 
+  costa10 %>% 
+    autoplot(CostM) + 
+    labs(title = "Monthly Total Cost A10 Prescription", 
        y="Total Cost in millions")
   
   
@@ -218,7 +227,7 @@ Season plot
 
 ```{r}
 costa10 %>% 
-  gg_season(CostM,labels = "both") 
+  gg_season(CostM,labels = "left") 
 
 ```
 
@@ -262,7 +271,8 @@ autoplot(h,Ttrips)
 To see the timing of the seasonal peaks
 
 ```{r}
- gg_season(h, Ttrips) + labs(y = "Overnight trips", title = "Australian holidays")
+ gg_season(h, Ttrips) + 
+   labs(y = "Overnight trips", title = "Australian holidays")
  
  gg_subseries(h,Ttrips)
  
