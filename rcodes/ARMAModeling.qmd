@@ -10,13 +10,18 @@ execute:
 ---
 
 Time Series analysis using ARMA models can be done as follows:
-1. Plot the data / ACF and examine the characteristics
-2. data model (variance change, trend, seasonality)
-3. Transform and Eliminate / Estimate the components
-4. Test the residuals if IID 
-5. Select p and q for the ARMA(p,q) using PCAF and ACF
-6. Select the best
 
+1.  Plot the data / ACF and examine the characteristics
+
+2.  Data model (variance change, trend, seasonality)
+
+3.   Transform and Eliminate / Estimate the components
+
+4.   Test the residuals if IID
+
+5.  Select p and q for the ARMA(p,q) using PCAF and ACF
+
+6.   Select the best
 
 ## Estimation of the parameters
 
@@ -26,18 +31,21 @@ $$
 \Phi(B) X_t = \Theta(B) Z_t, \qquad Z_t \sim WN(0,\sigma^2)
 $$
 
-
-where $\Phi(B) = 1-\phi_1X_{t-1} - \ldots - \phi_pX_{t-p}$ and $\Theta(B) = 1+\theta_1Z_{t-1} + \ldots + \theta_qZ_{t-q}$ 
+where $\Phi(B) = 1-\phi_1X_{t-1} - \ldots - \phi_pX_{t-p}$ and $\Theta(B) = 1+\theta_1Z_{t-1} + \ldots + \theta_qZ_{t-q}$
 
 ### Simulate ARMA models
 
 #### MA(1) example
 
+$$
+X_t = 0.8Z_{t-1} + Z_t;  Z_t \sim WN(0,1)
+$$
+
 ```{r}
 library(itsmr)
 ma1 = arima.sim(model = list(ar=c(),ma=c(0.8)),n=200)
 plot.ts(ma1)
-acf(ma1,lag.max = 40)
+plota(ma1)
 
 # Innovations estimator - MA(q)
 ia(ma1,q=1)
@@ -45,30 +53,38 @@ ia(ma1,q=1)
 
 #### AR(1) example
 
+$$
+X_t = 0.4 X_{t-1} + Z_t; Z_t \sim WN(0,1)
+$$
+
 ```{r}
 library(itsmr)
 ar1 = arima.sim(model = list(ar=c(0.4),ma=c()),n=200)
 plot.ts(ar1)
-acf(ar1,lag.max = 40)
+plota(ar1)
 
 # yule-walker estimator - AR(p)
 yw(ar1,p=1)
 ```
 
-
 #### ARMA(1,1) example
+
+$$
+X_t = 0.4X_{t-1} + 0.5 Z_{t-1} + Z_t; Z_t \sim WN(0,1)
+$$
 
 ```{r}
 library(itsmr)
 arma11 = arima.sim(model = list(ar=c(0.4),ma=c(0.5)),n=200)
 plot.ts(arma11)
-acf(arma11,lag.max = 40)
+plota(arma11)
 
 # HR estimator - ARMA(p,q)
 hannan(arma11,p = 1,q = 1)
 ```
 
-### MLE estimator 
+### MLE estimator
+
 ```{r}
 library(itsmr)
 arma11 = specify(ar=c(0.4),ma=c(0.5),sigma2=1)
@@ -80,7 +96,6 @@ acf(data.sim,lag.max = 40)
 # MLE estimator - ARMA(p,q)
 arma(data.sim,p=1,q=1)
 ```
-
 
 ## Example Dow Jones Utilities Index 1972
 
@@ -101,9 +116,7 @@ R = r - mean(r)
 test(R)
 ```
 
-Some possible models are:
-- AR(1) or MA(1) or MA(2)
-- ARMA(1,1) or ARMA(1,2)
+Some possible models are: - AR(1) or MA(1) or MA(2) - ARMA(1,1) or ARMA(1,2)
 
 ```{r}
 # AR(1)
@@ -122,16 +135,17 @@ cbind(ar1=ar1$aicc,
       arma12=arma12$aicc,
       automodel=automodel$aicc)
 ```
+
 The best model in terms of AICC is AR(1) given by:
 
 $$
  (1-0.45B)(\nabla X_t - 0.134) = Z_t, \qquad Z_t \sim WN(0,0.145) 
 $$
 
-Or we can rewrite it: $X_t - X_{t-1} = Y_t$
+Or we can rewrite it: $X_t - X_{t-1} - 0.134= Y_t$
 
 $$
-Y_t = 0.134 + 0.45Y_t + Z_t
+Y_t = 0.45Y_{t-1} + Z_t
 $$
 
 We need to see if the the residuals of the model are iid?
@@ -139,7 +153,7 @@ We need to see if the the residuals of the model are iid?
 ```{r}
 model = specify(ar=arma11$phi , ma=arma11$theta , sigma2 = arma11$sigma2)
 M= c("diff",1)
-rfit = Resid(x = dowj,M = M,a = model)
+rfit = Resid(x = dowj,M = M,a = model) # residual from the model Z_t
 test(rfit)
 ```
 
@@ -151,14 +165,12 @@ The equation is:
 
 $$
 (1-0.77B)(\nabla X_t - 0.134) = Z_t -0.42Z_{t-1}, \quad Z_t \sim WN(0,0.142)
-$$
-The 95% CI for the parameters are:
+$$ The 95% CI for the parameters are:
 
 ```{r}
 c(arma11$phi + 1.95 *arma11$se.phi,arma11$phi - 1.95* arma11$se.phi)
 c(arma11$theta + 1.95 *arma11$se.theta,arma11$theta - 1.95 *arma11$se.theta)
 ```
-
 
 ## Wine data
 
