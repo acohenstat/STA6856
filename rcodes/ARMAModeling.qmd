@@ -15,13 +15,13 @@ Time Series analysis using ARMA models can be done as follows:
 
 2.  Data model (variance change, trend, seasonality)
 
-3.   Transform and Eliminate / Estimate the components
+3.  Transform and Eliminate / Estimate the components
 
-4.   Test the residuals if IID
+4.  Test the residuals if IID
 
 5.  Select p and q for the ARMA(p,q) using PCAF and ACF
 
-6.   Select the best
+6.  Select the best
 
 ## Estimation of the parameters
 

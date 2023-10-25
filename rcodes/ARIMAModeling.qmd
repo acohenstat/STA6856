@@ -37,7 +37,6 @@ r = Resid(gnp,M)
 test(r)
 ```
 
-
 ### Test stationary
 
 ```{r}
@@ -49,7 +48,6 @@ library(aTSA)
 adf.test(r)
 # Results in stationary data. No differencing is needed, then d=0.
 ```
-
 
 ### ARIMA models
 
@@ -116,7 +114,6 @@ c(MA2=ma2$aic, ARMA12=arma12$aic, ARMA21=arma21$aic)
 
 ```
 
-
 The equation of MA(2):
 
 $$
@@ -135,16 +132,58 @@ M=c("diff",1)
 e = Resid(austres,M)
 test(e)
 
-adf.test(e)
+aTSA::adf.test(e)
+# since the non-stationary was not rejected. We need to do another differencing operator.
 
+aTSA::adf.test(diff(e))
+
+test(diff(e))
+
+# Fit ARIMA(p,d=1,q)
 a1=arima(x = austres,order = c(2,1,2))
 test(a1$residuals)
 
-```
+# Fit ARIMA(p,d=2,q)
+a2=arima(x = austres,order = c(2,2,2))
+test(a2$residuals)
 
+
+# Fit ARIMA(p,d=1,q) - not iid
+a3=arima(x = austres,order = c(1,1,0))
+test(a3$residuals)
+
+
+# Fit ARIMA(p,d=1,q) - not iid
+a4=arima(x = austres,order = c(1,1,1))
+test(a4$residuals)
+
+
+# Fit ARIMA(p,d=2,q) - not iid
+a5=arima(x = austres,order = c(1,2,0))
+test(a5$residuals)
+
+
+# Fit ARIMA(p,d=2,q) 
+a6=arima(x = austres,order = c(1,2,1))
+test(a6$residuals)
+
+
+# Fit ARIMA(p,d=2,q) = IMA(2,1)
+a7=arima(x = austres,order = c(0,2,1))
+test(a7$residuals)
+
+c(a1$aic,a2$aic,a6$aic,a7$aic)
+
+```
 
 The equation of ARIMA(2,1,2):
 
 $$
-(1-0.6843B-0.3121B^2)(1-B)\log(X_t) = (1 - 0.1961B  -0.2975B^2)Z_t, \qquad Z_t \sim WN(0,99.47)
+(1-0.6843B-0.3121B^2)(1-B)(X_t) = (1 - 0.1961B  -0.2975B^2)Z_t, \qquad Z_t \sim WN(0,99.47)
+$$
+
+The equation of IMA(2,1):
+
+$$
+(1-B)^2 X_t = -0.59Z_{t-1} + Z_t; Z_t \sim WN(0,\sigma^2 = 101.17)
 $$
