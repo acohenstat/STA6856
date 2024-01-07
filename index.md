@@ -44,15 +44,16 @@ show_sidebar: false
 
 #### **Spring Break** 
 
-|      | TR    | HW4 - No meeting - SARIMA modeling group work   | |
-| 11   | T     | SARIMA models - R Examples | |
+|      | T    | SARIMA models - R Examples  | |
+| 11   | TR   | SARMA Practice Assignement 3 Group  **no meeting** | |
 
-|      | TR    | Forecasting | |
-| 12   | T    | Regression with ARMA(p,q) errors  | |
+|      | T    | Forecasting | |
+| 12   | TR   | Forecasting Practice Assignement 3 Group  **no meeting**    | |
 
-|      | TR    | HW5 - No meeting  | [.html/.qmd](rcodes/HW3.html)|
-| 13   | T    | GARCH Models  | |
-|      | TR    | Review  | |
-| 15   | T    | No meeting - Final Project  | |
-|      | TR    | No meeting - Final Project  | |
+|      | T    | Regression with ARMA Errors | |
+| 13   | TR   | SARMA Practice Assignement 3 Group  **no meeting** | |
+
+|      | T    | Review  | |
+| 15   | TR   | No meeting - Final Exam  | |
+
 | 16   | Final Week  |  | | 
